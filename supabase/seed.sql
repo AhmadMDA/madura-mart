@@ -1,0 +1,2 @@
+-- Phase 2 seed placeholder.
+-- Add initial seed data for categories, vouchers, or demo records in later phases.

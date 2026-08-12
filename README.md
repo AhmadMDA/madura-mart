@@ -1,16 +1,75 @@
-# React + Vite
+# Madura Mart
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Madura Mart is a production-ready e-commerce platform foundation built for Vercel + Supabase.
 
-Currently, two official plugins are available:
+## Features
+- React + Vite frontend
+- Tailwind CSS styling
+- Supabase client integration
+- Vercel serverless health endpoint
+- Phase 2 database schema foundation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
+- React
+- Vite
+- JavaScript
+- Tailwind CSS
+- Supabase PostgreSQL
+- Vercel Serverless Functions
 
-## React Compiler
+## Architecture
+- Frontend SPA deployed on Vercel
+- Supabase handles PostgreSQL, auth, storage, and RLS
+- Server-side operations stay in Vercel API routes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Environment Variables
+Copy `.env.example` to `.env` and fill in values for:
 
-## Expanding the Oxlint configuration
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `MIDTRANS_SERVER_KEY`
+- `MIDTRANS_CLIENT_KEY`
+- `MIDTRANS_IS_PRODUCTION`
+- `OPENAI_API_KEY`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Supabase Setup
+1. Create a Supabase project.
+2. Add the project URL and anonymous key to the frontend env.
+3. Apply migrations with Supabase CLI:
+   ```bash
+   supabase db push
+   ```
+4. Configure authentication and storage in the Supabase dashboard.
+
+## Local Development
+```bash
+npm install
+npm run dev
+```
+
+## Database Migration
+```bash
+supabase db push
+```
+
+## Vercel Deployment
+- Add environment variables in the Vercel dashboard.
+- Ensure the app uses the Vercel rewrite configuration in `vercel.json`.
+- Keep all server-side secrets off the client bundle.
+
+## Demo Accounts
+This phase does not yet include authentication flows.
+
+## Project Structure
+```bash
+madura-mart/
+├── api/
+├── src/
+├── supabase/
+├── .env.example
+├── README.md
+├── vercel.json
+├── vite.config.js
+└── package.json
+```
