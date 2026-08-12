@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signIn, signUp } from '../lib/auth'
 import { useAuth } from '../context/AuthContext'
+import { isSupabaseConfigured } from '../lib/supabase'
 
 const initialForm = {
   email: '',
@@ -52,7 +53,9 @@ export default function LoginPage() {
         if (result?.user) {
           setMessage('Login berhasil.')
 
-          if (profile?.role === 'admin' || isAdmin) {
+          const nextRole = result?.profile?.role || profile?.role || (isAdmin ? 'admin' : 'customer')
+
+          if (nextRole === 'admin') {
             navigate('/admin')
           } else {
             navigate('/')
@@ -96,6 +99,12 @@ export default function LoginPage() {
             Sign Up
           </button>
         </div>
+
+        {!isSupabaseConfigured ? (
+          <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+            Mode demo aktif: gunakan akun admin@maduramart.test / admin123 atau customer@maduramart.test / customer123.
+          </div>
+        ) : null}
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           {mode === 'signup' ? (

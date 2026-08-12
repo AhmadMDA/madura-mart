@@ -14,6 +14,8 @@ export const supabase =
       })
     : null
 
+export const isSupabaseConfigured = Boolean(supabase)
+
 export const getSupabaseStatus = () => {
   if (!supabaseUrl || !supabaseAnonKey) {
     return 'Missing environment variables'

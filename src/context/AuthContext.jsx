@@ -4,6 +4,12 @@ import { supabase } from '../lib/supabase'
 
 const AuthContext = createContext(null)
 
+function getLocalSession() {
+  if (typeof window === 'undefined') return null
+  const stored = window.localStorage.getItem('madura-mart-session')
+  return stored ? JSON.parse(stored) : null
+}
+
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null)
   const [profile, setProfile] = useState(null)
@@ -11,12 +17,26 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let isMounted = true
+    let subscription = null
 
     async function initializeAuth() {
       if (!supabase) {
-        setSession(null)
-        setProfile(null)
-        setLoading(false)
+        const localSession = getLocalSession()
+
+        if (localSession?.user?.email) {
+          const currentProfile = await getCurrentProfile()
+          if (isMounted) {
+            setSession(localSession)
+            setProfile(currentProfile)
+          }
+        } else {
+          if (isMounted) {
+            setSession(null)
+            setProfile(null)
+          }
+        }
+
+        if (isMounted) setLoading(false)
         return
       }
 
@@ -45,9 +65,14 @@ export function AuthProvider({ children }) {
 
     initializeAuth()
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, nextSession) => {
+    if (!supabase) {
+      setLoading(false)
+      return () => {
+        isMounted = false
+      }
+    }
+
+    const authSubscription = supabase.auth.onAuthStateChange(async (_event, nextSession) => {
       if (!isMounted) return
 
       setSession(nextSession)
@@ -67,9 +92,11 @@ export function AuthProvider({ children }) {
       setLoading(false)
     })
 
+    subscription = authSubscription.data.subscription
+
     return () => {
       isMounted = false
-      subscription.unsubscribe()
+      subscription?.unsubscribe?.()
     }
   }, [])
 
